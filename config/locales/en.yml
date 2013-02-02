@@ -79,6 +79,14 @@ en:
       collection: 
         one: "table"
         other: "tables"
+    sqlserver:
+      title: 'SqlServer'
+      result:
+        one: 'record'
+        other: 'records'
+      collection:
+        one: 'table'
+        other: 'tables'
 
   flash:
     notice:

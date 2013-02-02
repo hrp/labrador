@@ -8,7 +8,8 @@ module Labrador
       "mysql2" => {},
       "sqlite" => {},
       "sqlite2" => {},
-      "sqlite3" => {}
+      "sqlite3" => {},
+      "sqlserver" => {}
     }
 
     attr_accessor :configuration_path, :configuration, :errors, :database, :app
@@ -122,6 +123,7 @@ module Labrador
         when "postgresql"     then Postgres.new(credentials)
         when /^mysql(2)?$/    then Mysql.new(credentials)
         when /^sqlite(2|3)?$/ then Sqlite.new(sqlite_credentials)
+        when "sqlserver"      then SqlServer.new(credentials)
         else
           add_error(I18n.t('adapters.unsupported_adapter'))
           nil
