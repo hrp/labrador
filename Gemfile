@@ -9,6 +9,7 @@ gem 'amalgalite', '1.1.2' #, git: "git://github.com/copiousfreetime/amalgalite.g
 gem 'postgres-pr'
 gem 'ruby-mysql', '~> 2.9.10'
 gem 'mongo', '1.6.4'
+gem 'tiny_tds'
 gem 'bson'
 gem 'bson_ext'
 gem 'json'
