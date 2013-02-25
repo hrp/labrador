@@ -120,7 +120,7 @@ module Labrador
     end
 
     def id
-      "sqlserver"
+      "mssql"
     end
 
     def name
