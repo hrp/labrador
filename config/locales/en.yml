@@ -36,7 +36,7 @@ en:
       result:
         one: "record"
         other: "records"
-      collection: 
+      collection:
         one: "table"
         other: "tables"
     mysql2:
@@ -44,7 +44,7 @@ en:
       result:
         one: "record"
         other: "records"
-      collection: 
+      collection:
         one: "table"
         other: "tables"
     postgresql:
@@ -52,7 +52,7 @@ en:
       result:
         one: "record"
         other: "records"
-      collection: 
+      collection:
         one: "table"
         other: "tables"
     sqlite:
@@ -60,7 +60,7 @@ en:
       result:
         one: "record"
         other: "records"
-      collection: 
+      collection:
         one: "table"
         other: "tables"
     sqlite2:
@@ -68,7 +68,7 @@ en:
       result:
         one: "record"
         other: "records"
-      collection: 
+      collection:
         one: "table"
         other: "tables"
     sqlite3:
@@ -76,11 +76,11 @@ en:
       result:
         one: "record"
         other: "records"
-      collection: 
+      collection:
         one: "table"
         other: "tables"
     sqlserver:
-      title: 'SqlServer'
+      title: 'MSSQL'
       result:
         one: 'record'
         other: 'records'

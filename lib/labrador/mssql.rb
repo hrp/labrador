@@ -1,16 +1,16 @@
 require 'tiny_tds'
 
 module Labrador
-  class SqlServer
+  class Mssql
     extend Configuration
     include RelationalStore
     include ViewHelper
-    
+
     attr_accessor :host, :port, :database, :socket, :session
 
     DEFAULT_PORT = 1433
 
-    def initialize(params = {})      
+    def initialize(params = {})
       @host     = params[:host]
       @port     = params[:port] || DEFAULT_PORT
       @database = params[:database]
@@ -27,12 +27,12 @@ module Labrador
       names
     end
 
-    # Parse msyql-ruby Mysql::Result into array of key value records. 
+    # Parse msyql-ruby Mysql::Result into array of key value records.
     def parse_results(results)
       results.collect do |row|
         record = {}
         row.each_with_index{|val, i| record[results.fields[i].name] = val }
-        
+
         record
       end
     end
@@ -48,7 +48,7 @@ module Labrador
       session.execute("
         ;WITH Results_CTE AS
         (
-          SELECT *, 
+          SELECT *,
           ROW_NUMBER() #{"OVER (ORDER BY #{order_by} #{direction})"} AS RowNum
           FROM #{collection_name}
           #{"WHERE #{where_clause}" if where_clause}
