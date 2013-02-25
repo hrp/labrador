@@ -10,21 +10,25 @@ describe Labrador::Mssql do
       user: config["user"],
       password: config["password"],
       port: config["port"],
-      database: config["database"],
+      # database: config["database"],
       socket: config["socket"]
     )
-    @mssql.session.query("DROP TABLE IF EXISTS users")
-    @mssql.session.query("
+    @mssql.session.execute("
+      IF db_id('#{config['database']}') IS NULL
+        CREATE DATABASE #{config['database']}
+    ").do
+    @mssql.session.execute("DROP TABLE IF EXISTS users").do
+    @mssql.session.execute("
       CREATE TABLE users(
         id INTEGER PRIMARY KEY UNIQUE,
         username VARCHAR(25),
         age INTEGER
       )
-    ")
+    ").do
     1.upto(20) do |i|
-      @mssql.session.query("
+      @mssql.session.execute("
         INSERT INTO users (id, username, age) VALUES(#{i}, 'user#{i}', #{i + 10})
-      ")
+      ").do
     end
   end
 
