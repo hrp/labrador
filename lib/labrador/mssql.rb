@@ -59,6 +59,7 @@ module Labrador
         AND RowNum <= #{skip} + #{limit}
       ")
       resp.each{|row| results << row.reject{|k| k == 'RowNum'} }
+      resp.do
 
       results
     end
@@ -67,38 +68,44 @@ module Labrador
       primary_key_name = primary_key_for(collection_name)
       values = data.collect{|key, val| "'#{session.escape(val.to_s)}'" }.join(", ")
       fields = data.collect{|key, val| key.to_s }.join(", ")
-      session.execute("
+      resp = session.execute("
         INSERT INTO #{collection_name}
         (#{ fields })
         VALUES (#{ values })
       ")
+      resp.do
+      resp
     end
 
     def update(collection_name, id, data = {})
       primary_key_name = primary_key_for(collection_name)
-      prepared_key_values = data.collect{|key, val| "#{key}=?" }.join(",")
-      values = data.values
-      values << id
-      query = session.execute("
+      prepared_key_values = data.collect{|key, val| "#{key}='#{session.escape(val)}'" }.join(","
+      query = "
         UPDATE #{collection_name}
         SET #{ prepared_key_values }
-        WHERE #{primary_key_name}=#{values}
-      ")
-      # query.execute(*values)
+        WHERE #{primary_key_name}=#{id}
+      "
+      resp = session.execute(query)
+      resp.do
+      resp
     end
 
     def delete(collection_name, id)
       primary_key_name = primary_key_for(collection_name)
-      query = session.execute("DELETE FROM #{collection_name} WHERE #{primary_key_name}=#{id}")
+      resp = session.execute("DELETE FROM #{collection_name} WHERE #{primary_key_name}=#{id}")
+      resp.do
+      resp
     end
 
     def schema(collection_name)
       # parse_results(session.execute("DESCRIBE #{collection_name}"))
-      session.execute("
+      resp = session.execute("
         SELECT *
         FROM INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_NAME='#{collection_name}')
       ")
+      resp.do
+      resp
     end
 
     def primary_key_for(collection_name)
@@ -108,7 +115,9 @@ module Labrador
         WHERE OBJECTPROPERTY(OBJECT_ID(constraint_name), 'IsPrimaryKey') = 1
         AND table_name = '#{collection_name}'"
       result = session.execute(query)
-      result && result.first['column_name']
+      primary_key = result && result.first['column_name']
+      result.do
+      primary_key
     end
 
     def connected?
