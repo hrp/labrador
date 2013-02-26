@@ -45,7 +45,7 @@ module Labrador
       where_clause = options[:conditions]
 
       results = []
-      session.execute("
+      resp = session.execute("
         ;WITH Results_CTE AS
         (
           SELECT *,
@@ -55,16 +55,17 @@ module Labrador
         )
         SELECT *
         FROM Results_CTE
-        WHERE RowNum >= #{skip}
-        AND RowNum < #{skip} + #{limit}
-      ").each{|row| results << row }
+        WHERE RowNum > #{skip}
+        AND RowNum <= #{skip} + #{limit}
+      ")
+      resp.each{|row| results << row.reject{|k| k == 'RowNum'} }
 
       results
     end
 
     def create(collection_name, data = {})
       primary_key_name = primary_key_for(collection_name)
-      values = data.collect{|key, val| "'#{session.escape_string(val.to_s)}'" }.join(", ")
+      values = data.collect{|key, val| "'#{session.escape(val.to_s)}'" }.join(", ")
       fields = data.collect{|key, val| key.to_s }.join(", ")
       session.execute("
         INSERT INTO #{collection_name}
@@ -78,18 +79,17 @@ module Labrador
       prepared_key_values = data.collect{|key, val| "#{key}=?" }.join(",")
       values = data.values
       values << id
-      query = session.prepare("
+      query = session.execute("
         UPDATE #{collection_name}
         SET #{ prepared_key_values }
-        WHERE #{primary_key_name}=?
+        WHERE #{primary_key_name}=#{values}
       ")
-      query.execute(*values)
+      # query.execute(*values)
     end
 
     def delete(collection_name, id)
       primary_key_name = primary_key_for(collection_name)
-      query = session.prepare("DELETE FROM #{collection_name} WHERE #{primary_key_name}=?")
-      query.execute(id)
+      query = session.execute("DELETE FROM #{collection_name} WHERE #{primary_key_name}=#{id}")
     end
 
     def schema(collection_name)

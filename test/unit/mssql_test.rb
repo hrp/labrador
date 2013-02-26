@@ -10,17 +10,26 @@ describe Labrador::Mssql do
       user: config["user"],
       password: config["password"],
       port: config["port"],
-      # database: config["database"],
+      database: config["database"],
       socket: config["socket"]
     )
     @mssql.session.execute("
+      SET ANSI_NULLS ON
+      SET ANSI_PADDING ON
+      SET ANSI_WARNINGS ON
+      SET ARITHABORT ON
+      SET CONCAT_NULL_YIELDS_NULL ON
+      SET NUMERIC_ROUNDABORT OFF
+      SET QUOTED_IDENTIFIER ON
       IF db_id('#{config['database']}') IS NULL
         CREATE DATABASE #{config['database']}
     ").do
-    @mssql.session.execute("DROP TABLE IF EXISTS users").do
+    @mssql.session.execute("
+      IF OBJECT_ID('dbo.users', 'U') IS NOT NULL
+        DROP TABLE dbo.users").do
     @mssql.session.execute("
       CREATE TABLE users(
-        id INTEGER PRIMARY KEY UNIQUE,
+        id INTEGER PRIMARY KEY,
         username VARCHAR(25),
         age INTEGER
       )
@@ -88,7 +97,7 @@ describe Labrador::Mssql do
       @previousCount = @mssql.find(:users, limit: 1000).count
       @mssql.create(:users, id: 999, username: 'new_user', age: 100)
       @newUser = @mssql.find(:users,
-        limit: 1000, order_by: 'id', direction: 'desc', limit: 1).first
+        order_by: 'id', direction: 'desc', limit: 1).first
     end
 
     it 'insert a new record into the collection' do
@@ -105,10 +114,10 @@ describe Labrador::Mssql do
     before do
       @previousCount = @mssql.find(:users, limit: 1000).count
       @userBeforeUpdate = @mssql.find(:users,
-        limit: 1000, order_by: 'id', directon: 'desc', limit: 1).first
+        order_by: 'id', directon: 'desc', limit: 1).first
       @mssql.update(:users, @userBeforeUpdate["id"], username: 'updated_name')
       @userAfterUpdate = @mssql.find(:users,
-        limit: 1000, order_by: 'id', directon: 'desc', limit: 1).first
+        order_by: 'id', directon: 'desc', limit: 1).first
     end
 
     it 'should maintain collection count after update' do
@@ -128,7 +137,7 @@ describe Labrador::Mssql do
     before do
       @previousCount = @mssql.find(:users, limit: 1000).count
       @firstUser = @mssql.find(:users,
-        limit: 1000, order_by: 'id', directon: 'asc', limit: 1).first
+        order_by: 'id', directon: 'asc', limit: 1).first
       @mssql.delete(:users, @firstUser["id"])
     end
 
@@ -138,7 +147,7 @@ describe Labrador::Mssql do
 
     it 'should delete record with given id' do
       newFirst = @mssql.find(:users,
-              limit: 1000, order_by: 'id', directon: 'asc', limit: 1).first
+              order_by: 'id', directon: 'asc', limit: 1).first
       assert @firstUser["id"] != newFirst["id"]
     end
   end
