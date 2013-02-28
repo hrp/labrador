@@ -79,7 +79,7 @@ en:
       collection:
         one: "table"
         other: "tables"
-    sqlserver:
+    mssql:
       title: 'MSSQL'
       result:
         one: 'record'
