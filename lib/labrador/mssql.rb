@@ -79,7 +79,7 @@ module Labrador
 
     def update(collection_name, id, data = {})
       primary_key_name = primary_key_for(collection_name)
-      prepared_key_values = data.collect{|key, val| "#{key}='#{session.escape(val)}'" }.join(","
+      prepared_key_values = data.collect{|key, val| "#{key}='#{session.escape(val)}'" }.join(",")
       query = "
         UPDATE #{collection_name}
         SET #{ prepared_key_values }
@@ -98,14 +98,16 @@ module Labrador
     end
 
     def schema(collection_name)
-      # parse_results(session.execute("DESCRIBE #{collection_name}"))
-      resp = session.execute("
-        SELECT *
-        FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE TABLE_NAME='#{collection_name}')
-      ")
+      resp = session.execute("exec sp_columns #{collection_name}")
+      cols = resp.to_a
       resp.do
-      resp
+      cols.map do |col|
+        h = {}
+        col.each_pair do |key, val|
+          h[key.humanize] = val
+        end
+        h
+      end
     end
 
     def primary_key_for(collection_name)

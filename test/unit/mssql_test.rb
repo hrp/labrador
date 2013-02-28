@@ -5,14 +5,14 @@ describe Labrador::Mssql do
 
   before do
     config = YAML.load(File.read(Rails.root.join("config/database.yml")))["adapter_test"]["mssql"]
-    @mssql = Labrador::Mssql.new(
+    @mssql = Labrador::Mssql.new({
       host: config["host"],
       user: config["user"],
       password: config["password"],
       port: config["port"],
       database: config["database"],
       socket: config["socket"]
-    )
+    })
     @mssql.session.execute("
       SET ANSI_NULLS ON
       SET ANSI_PADDING ON
@@ -169,9 +169,9 @@ describe Labrador::Mssql do
     it 'should return schema for users table' do
       schema = @mssql.schema(:users)
       assert_equal 3, schema.length
-      assert_equal "id", schema.first["Field"]
-      assert_equal "username", schema.second["Field"]
-      assert_equal "age", schema.third["Field"]
+      assert_equal "id", schema.first["Column name"]
+      assert_equal "username", schema.second["Column name"]
+      assert_equal "age", schema.third["Column name"]
     end
   end
 end
