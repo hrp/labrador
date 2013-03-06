@@ -5,6 +5,7 @@ class @HeaderView extends Backbone.View
   events:
     'click [data-action=schema]'   : 'showSchema'
     'click [data-action=content]'  : 'showContent'
+    'click [data-action=console]'  : 'showConsole'
 
 
   initialize: ->
@@ -26,3 +27,6 @@ class @HeaderView extends Backbone.View
 
   showContent: (e) ->
     app.showContent()
+
+  showConsole: (e) ->
+    app.showConsole()

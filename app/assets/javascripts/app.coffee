@@ -14,6 +14,7 @@ class @App extends Backbone.Model
       if @hasDatabase()
         @database = new Database(path: @path())
         @tableView = new TableView(model: @database, el: ".fixed-table-container table:first")
+        @consoleView = new ConsoleView(model: @database, el: ".fixed-console-container")
         @progressView = new ProgressView()  
       @headerView = new HeaderView()
       @footerView = new FooterView(model: @database)
@@ -101,6 +102,10 @@ class @App extends Backbone.Model
     switch @get('context')
       when "schema"  then @showSchema(collection)
       when "content" then @showContent(collection)
+
+  showConsole: () ->
+    @set(context: 'console')
+
 
   
   isEditable: ->

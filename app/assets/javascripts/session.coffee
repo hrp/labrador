@@ -5,6 +5,7 @@
     "mongodb"
     "mysql"
     "sqlite"
+    "mssql"
   ]
 
   init: -> 

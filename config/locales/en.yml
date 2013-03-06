@@ -21,6 +21,7 @@ en:
   database:
     structure: 'Structure'
     content: 'Content'
+    console: 'Console'
   adapters:
     unsupported_adapter: "Unsupported adapter '%{adapter}'"
     mongodb:
