@@ -97,6 +97,12 @@ module Labrador
       resp
     end
 
+    def command(sql)
+      resp = session.execute(sql.to_s)
+      resp.do
+      resp
+    end
+
     def schema(collection_name)
       resp = session.execute("exec sp_columns #{collection_name}")
       cols = resp.to_a

@@ -39,6 +39,11 @@ class DataController < ApplicationController
   end
 
   def collections
-    render json: current_adapter.databse.collections
-  end 
+    render json: current_adapter.database.collections
+  end
+
+  def command
+    resp = current_adapter.database.command(params[:input])
+    render json: { output: resp.each{|r| r['name'] } }
+  end
 end

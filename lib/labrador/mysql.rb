@@ -5,12 +5,12 @@ module Labrador
     extend Configuration
     include RelationalStore
     include ViewHelper
-    
+
     attr_accessor :host, :port, :database, :socket, :session
 
     DEFAULT_PORT = 3306
 
-    def initialize(params = {})      
+    def initialize(params = {})
       @host     = params[:host]
       @port     = params[:port] || DEFAULT_PORT
       @database = params[:database]
@@ -28,12 +28,12 @@ module Labrador
       names
     end
 
-    # Parse msyql-ruby Mysql::Result into array of key value records. 
+    # Parse msyql-ruby Mysql::Result into array of key value records.
     def parse_results(results)
       results.collect do |row|
         record = {}
         row.each_with_index{|val, i| record[results.fields[i].name] = val }
-        
+
         record
       end
     end
@@ -85,6 +85,10 @@ module Labrador
       primary_key_name = primary_key_for(collection_name)
       query = session.prepare("DELETE FROM #{collection_name} WHERE #{primary_key_name}=?")
       query.execute(id)
+    end
+
+    def command(input)
+      # session.query(input)
     end
 
     def schema(collection_name)

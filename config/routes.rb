@@ -11,6 +11,7 @@ Labrador::Application.routes.draw do
         collection do
           get :collections, action: 'collections'
           get :schema, action: 'schema'
+          get :command, action: 'command'
         end
       end
     end 
