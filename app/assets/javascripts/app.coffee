@@ -14,7 +14,8 @@ class @App extends Backbone.Model
       if @hasDatabase()
         @database = new Database(path: @path())
         @tableView = new TableView(model: @database, el: ".fixed-table-container table:first")
-        @progressView = new ProgressView()  
+        @progressView = new ProgressView()
+        @consoleView = new ConsoleView(model: @database)
       @headerView = new HeaderView()
       @footerView = new FooterView(model: @database)
       Popover.init()
@@ -90,17 +91,27 @@ class @App extends Backbone.Model
     @database.find collection, limit: @get('limit'), (err, data) => @database.set({data: data})
 
 
+  showConsole: (collection) ->
+    collection ?= @database.collection()
+    @set(context: 'console')
+    return unless @hasDatabase() and collection?
+
+    @database.find collection, limit: @get('limit'), (err, data) => @database.set({data: data})
+
+
   refreshContext: ->
     collection = @database.collection()
     switch @get('context')
       when "schema"  then @showSchema(collection)
       when "content" then @showContent(collection)
+      when "console" then @showConsole(collection)
 
 
   showContext: (collection) ->
     switch @get('context')
       when "schema"  then @showSchema(collection)
       when "content" then @showContent(collection)
+      when "console" then @showConsole(collection)
 
   
   isEditable: ->
@@ -108,6 +119,7 @@ class @App extends Backbone.Model
     switch @get('context')
       when "schema"  then false
       when "content" then true
+      when "console" then false
 
 
   showError: (error) ->
