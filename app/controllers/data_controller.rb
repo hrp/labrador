@@ -44,6 +44,6 @@ class DataController < ApplicationController
 
   def command
     resp = current_adapter.database.command(params[:input])
-    render json: { output: resp.each{|r| r['name'] } }
+    render json: { output: resp }
   end
 end

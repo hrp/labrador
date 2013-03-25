@@ -44,16 +44,16 @@
           <input type="text" id="host" placeholder="<%= t('connect.host_placeholder') %>" name="session[host]" value="127.0.0.1" />
         </div>
       </div>
-      <div class="control-group" data-adapter-dependent data-postgresql data-mongodb data-mysql data-mssql>
-        <label class="control-label" for="inputUserName"><%= t('connect.username') %></label>
-        <div class="controls">
-          <input type="text" id="inputUserName" placeholder="<%= t('connect.username_placeholder') %>" name="session[username]" />
-        </div>
-      </div>
       <div class="control-group">
         <label class="control-label" for="inputPassword"><%= t('connect.database') %></label>
         <div class="controls">
           <input type="text" id="inputPassword" placeholder="<%= t('connect.database_placeholder') %>" name="session[database]" />
+        </div>
+      </div>
+      <div class="control-group" data-adapter-dependent data-postgresql data-mongodb data-mysql data-mssql>
+        <label class="control-label" for="inputUserName"><%= t('connect.username') %></label>
+        <div class="controls">
+          <input type="text" id="inputUserName" placeholder="<%= t('connect.username_placeholder') %>" name="session[username]" />
         </div>
       </div>
       <div class="control-group" data-adapter-dependent data-postgresql data-mongodb data-mysql data-mssql>
